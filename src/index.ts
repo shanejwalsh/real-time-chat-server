@@ -28,11 +28,11 @@ io.on('connection', async (socket) => {
   const messages = await db.message.findMany();
   io.emit('messages_updated', messages);
 
-  socket.on('join_room', async (data) => {
+  socket.on('join_room', async () => {
+    console.log('joining room');
+
     socket.join('room');
     const messages = await db.message.findMany();
-    console.log('sending messages', messages);
-
     io.emit('messages_updated', messages);
   });
 
@@ -44,6 +44,10 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('send_message', async (message: CreateMessageRequest) => {
+    if (!message.content || !message.author) {
+      throw new Error('invalid message' + JSON.stringify(message));
+    }
+
     await db.message.create({
       data: {
         content: message.content,
