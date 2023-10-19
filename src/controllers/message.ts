@@ -32,7 +32,7 @@ export async function createMessage(req: Request<CreateMessageRequest>, resp: Re
   resp.status(201).json(message);
 }
 
-export async function deleteAll(_: any, resp: Response) {
+export async function deleteAllMessages(_: any, resp: Response) {
   await db.message.deleteMany();
 
   return resp.status(204);

@@ -4,7 +4,11 @@ import bodyparser from 'body-parser';
 import http from 'http';
 import { Server } from 'socket.io';
 
-import { createMessage, getMessages } from './controllers/message';
+import { createMessage, deleteAllMessages, getMessages } from './controllers/message';
+
+const ROUTES = {
+  MESSAGES: '/messages',
+} as const;
 
 type CreateMessageRequest = {
   content: string;
@@ -71,9 +75,9 @@ app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
-app.get('/messages', getMessages);
-
-app.post('/messages', createMessage);
+app.get(ROUTES.MESSAGES, getMessages);
+app.post(ROUTES.MESSAGES, createMessage);
+app.delete(ROUTES.MESSAGES, deleteAllMessages);
 
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
